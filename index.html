@@ -568,7 +568,25 @@
   }
   .highlight:nth-child(2){background:linear-gradient(160deg, rgba(218,208,238,0.42), rgba(207,225,236,0.22));}
   .highlight:nth-child(3){background:linear-gradient(160deg, rgba(207,225,236,0.28), rgba(218,208,238,0.42));}
-  .highlight__icon{height:96px;width:auto;max-width:100%;display:block;align-self:flex-start;object-fit:contain;flex-shrink:0;}
+  .highlight__num{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    flex-shrink:0;
+    align-self:flex-start;
+    border-radius:50%;
+    background:var(--rose);
+    color:#fff;
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:600;
+    font-size:1.15rem;
+    box-shadow:0 5px 12px -4px rgba(216,84,63,0.55);
+    transform:rotate(-6deg);
+  }
+  .highlight:nth-child(2) .highlight__num{background:var(--gold);box-shadow:0 5px 12px -4px rgba(231,185,104,0.6);transform:rotate(4deg);}
+  .highlight:nth-child(3) .highlight__num{background:var(--sage-deep);box-shadow:0 5px 12px -4px rgba(114,155,124,0.55);transform:rotate(-4deg);}
   .highlight h3{font-size:1.02rem;font-weight:600;}
   .highlight p{margin:0;font-size:0.88rem;color:var(--ink-soft);line-height:1.5;}
   @keyframes highlightIn{
@@ -1643,7 +1661,7 @@
         var card = document.createElement('div');
         card.className = 'highlight';
         card.style.animationDelay = (0.15 + i * 0.28) + 's';
-        card.innerHTML = '<img class="highlight__icon" src="' + item.icon + '" alt="">' +
+        card.innerHTML = '<span class="highlight__num">' + (i + 1) + '</span>' +
           '<h3>' + item.title + '</h3>' +
           '<p>' + item.html + '</p>';
         container.appendChild(card);
