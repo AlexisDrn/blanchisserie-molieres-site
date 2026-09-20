@@ -649,49 +649,6 @@
     .highlight{opacity:1; transform:none; animation:none;}
   }
 
-  .labels-strip{
-    margin-top:2.6rem;
-    padding:1.3rem 1.4rem;
-    border:1px solid var(--line);
-    border-radius:18px;
-    background:rgba(207,225,236,0.22);
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:1.4rem;
-  }
-  .labels-strip p{margin:0;font-size:0.9rem;color:var(--ink-soft);max-width:16rem;}
-  .labels-strip__icons{display:flex;gap:1rem;flex-wrap:wrap;}
-  .care-icon{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:0.45rem;
-    width:66px;
-  }
-  .care-icon__badge{
-    width:52px;
-    height:52px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:14px;
-    background:rgba(111,121,196,0.14);
-    box-shadow:0 6px 16px -10px rgba(70,60,100,0.32);
-    transition:transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .care-icon:hover .care-icon__badge{transform:translateY(-3px);box-shadow:0 10px 20px -10px rgba(70,60,100,0.4);}
-  .care-icon svg{width:27px;height:27px;color:#6F79C4;}
-  .care-icon span{font-size:0.66rem;font-weight:600;text-align:center;line-height:1.25;color:var(--ink-soft);}
-  .care-icon--bleach .care-icon__badge{background:rgba(231,185,104,0.2);}
-  .care-icon--bleach svg{color:#B9832B;}
-  .care-icon--iron .care-icon__badge{background:rgba(216,84,63,0.14);}
-  .care-icon--iron svg{color:var(--rose-deep);}
-  .care-icon--dryclean .care-icon__badge{background:rgba(114,155,124,0.16);}
-  .care-icon--dryclean svg{color:var(--sage-deep);}
-  .care-icon--tumble .care-icon__badge{background:rgba(108,85,168,0.14);}
-  .care-icon--tumble svg{color:#6C55A8;}
-
   /* ---------- Pourquoi nous choisir ---------- */
   .why-us{
     margin-top:2.9rem;
@@ -846,6 +803,102 @@
   }
   @media (prefers-reduced-motion:reduce){
     .faq-item{opacity:1; transform:none; animation:none;}
+  }
+
+  /* ---------- Articles ---------- */
+  .articles__list{
+    margin-top:1.8rem;
+    display:flex;
+    flex-direction:column;
+    gap:0.85rem;
+    max-width:44rem;
+  }
+  .article-item{
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:var(--cream);
+    box-shadow:0 6px 18px -12px rgba(70,60,100,0.2);
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(20px);
+    animation:whyCardIn 1s cubic-bezier(0.16,0.8,0.28,1) forwards;
+  }
+  .article-item__q{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    padding:1.05rem 1.2rem;
+    background:none;
+    border:0;
+    text-align:left;
+    font-family:"Fraunces", Georgia, serif;
+    font-size:1rem;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .article-item__icon{
+    flex-shrink:0;
+    width:20px;
+    height:20px;
+    color:var(--rose-deep);
+    transition:transform 0.3s ease;
+  }
+  .article-item.is-open .article-item__icon{transform:rotate(45deg);}
+  .article-item__a-wrap{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.4s ease;
+  }
+  .article-item.is-open .article-item__a-wrap{max-height:640px;}
+  .article-item__a{
+    margin:0;
+    padding:0 1.2rem 1.1rem;
+    font-size:0.9rem;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  .article-item__body{
+    padding:0 1.2rem 1.1rem;
+  }
+  .article-item__body p{
+    margin:0 0 0.9rem;
+    font-size:0.9rem;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  .article-item__body p:last-child{margin-bottom:0;}
+  .symbol-guide{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:0.9rem 1.3rem;
+    margin:0 0 1.1rem;
+  }
+  @media (max-width:560px){
+    .symbol-guide{grid-template-columns:1fr;}
+  }
+  .symbol-guide__item{
+    display:flex;
+    gap:0.7rem;
+    align-items:flex-start;
+  }
+  .symbol-guide__icon{
+    flex-shrink:0;
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(216,84,63,0.12);
+  }
+  .symbol-guide__icon svg{width:18px;height:18px;color:var(--rose-deep);}
+  .symbol-guide__item strong{display:block;font-size:0.86rem;color:var(--ink);margin-bottom:0.15rem;}
+  .symbol-guide__item span{font-size:0.86rem;color:var(--ink-soft);line-height:1.5;}
+  @media (prefers-reduced-motion:reduce){
+    .article-item{opacity:1; transform:none; animation:none;}
   }
   @keyframes whyCardIn{
     from{opacity:0; transform:translateY(28px);}
@@ -1460,6 +1513,7 @@
       <li><button class="tabs__btn" data-nav="galerie">Galerie</button></li>
       <li><button class="tabs__btn" data-nav="point-relais">Point relais</button></li>
       <li><button class="tabs__btn" data-nav="apropos">À propos</button></li>
+      <li><button class="tabs__btn" data-nav="articles">Articles</button></li>
       <li><button class="tabs__btn" data-nav="mentions">Mentions légales</button></li>
     </ul>
   </nav>
@@ -1482,32 +1536,6 @@
       </div>
 
       <div class="highlights" id="highlights" aria-live="polite"></div>
-
-      <div class="labels-strip">
-        <div class="labels-strip__icons">
-          <div class="care-icon care-icon--wash">
-            <span class="care-icon__badge"><svg><use href="#c-wash"/></svg></span>
-            <span>Lavage</span>
-          </div>
-          <div class="care-icon care-icon--bleach">
-            <span class="care-icon__badge"><svg><use href="#c-bleach"/></svg></span>
-            <span>Javel</span>
-          </div>
-          <div class="care-icon care-icon--iron">
-            <span class="care-icon__badge"><svg><use href="#c-iron"/></svg></span>
-            <span>Repassage</span>
-          </div>
-          <div class="care-icon care-icon--dryclean">
-            <span class="care-icon__badge"><svg><use href="#c-dryclean"/></svg></span>
-            <span>Nettoyage à sec</span>
-          </div>
-          <div class="care-icon care-icon--tumble">
-            <span class="care-icon__badge"><svg><use href="#c-tumble"/></svg></span>
-            <span>Sèche-linge</span>
-          </div>
-        </div>
-        <p>Nous savons lire chaque étiquette — et adapter chaque traitement à ce qu'elle indique.</p>
-      </div>
 
       <div class="why-us">
         <div class="panel__head">
@@ -1795,6 +1823,16 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- ARTICLES -->
+    <section class="panel" id="panel-articles" data-panel="articles">
+      <div class="panel__head">
+        <span class="u-eyebrow">Nos conseils</span>
+        <h2>Articles</h2>
+        <p class="panel__lede">Des conseils simples et fiables pour bien entretenir vos vêtements et prolonger leur durée de vie.</p>
+      </div>
+      <div class="articles__list" id="articles-list" aria-live="polite"></div>
     </section>
 
     <!-- MENTIONS LEGALES -->
@@ -2156,6 +2194,75 @@
     }
 
     renderFaq();
+
+    var articlesData = [
+      {
+        q: 'Comprendre les symboles d\'entretien sur vos vêtements',
+        html:
+          '<p>Les étiquettes d\'entretien utilisent un langage de pictogrammes, indépendant de la langue, qui indique comment traiter un vêtement sans l\'abîmer. Voici les principales familles de symboles à connaître.</p>' +
+          '<div class="symbol-guide">' +
+            '<div class="symbol-guide__item"><span class="symbol-guide__icon"><svg><use href="#c-wash"/></svg></span><div><strong>Lavage</strong><span>Une bassine avec un nombre indique la température maximale de lavage, en machine ou à la main.</span></div></div>' +
+            '<div class="symbol-guide__item"><span class="symbol-guide__icon"><svg><use href="#c-bleach"/></svg></span><div><strong>Javel</strong><span>Un triangle précise si l\'eau de Javel ou un produit chloré peuvent être utilisés, ou doivent être évités.</span></div></div>' +
+            '<div class="symbol-guide__item"><span class="symbol-guide__icon"><svg><use href="#c-iron"/></svg></span><div><strong>Repassage</strong><span>Un fer à repasser, avec un à trois points, indique la température maximale à respecter.</span></div></div>' +
+            '<div class="symbol-guide__item"><span class="symbol-guide__icon"><svg><use href="#c-dryclean"/></svg></span><div><strong>Nettoyage à sec</strong><span>Un cercle indique si la pièce peut être nettoyée à sec, et avec quel type de solvant.</span></div></div>' +
+            '<div class="symbol-guide__item"><span class="symbol-guide__icon"><svg><use href="#c-tumble"/></svg></span><div><strong>Sèche-linge</strong><span>Un carré avec un rond précise si le séchage en machine est possible, et à quelle intensité.</span></div></div>' +
+          '</div>' +
+          '<p>Un symbole barré d\'une croix signifie que l\'opération est déconseillée, voire à proscrire. En cas de doute sur une matière particulière, ou si l\'étiquette a disparu à l\'usure, il est plus prudent de demander conseil à un professionnel plutôt que de risquer d\'abîmer un vêtement auquel on tient.</p>'
+      },
+      {
+        q: 'Comment prendre soin de la laine et des lainages',
+        a: 'La laine est une matière vivante qui demande une attention particulière. Un lavage à l\'eau trop chaude ou un brassage trop énergique peut la faire feutrer et rétrécir de façon irréversible. Il est préférable de laver les lainages à basse température, avec une lessive douce adaptée aux fibres animales, et d\'éviter de les essorer en les tordant&nbsp;: mieux vaut les presser délicatement entre deux serviettes. Le séchage doit se faire à plat, loin d\'une source de chaleur directe, pour que la pièce conserve sa forme. Entre deux lavages, aérer un pull ou un manteau en laine suffit souvent à le rafraîchir sans avoir à le laver systématiquement, ce qui préserve la fibre dans la durée. Pour les pièces plus fragiles, brodées ou mélangées à d\'autres matières, un nettoyage professionnel adapté permet d\'aller plus en profondeur sans les contraintes d\'un lavage classique à l\'eau.'
+      },
+      {
+        q: 'Taches du quotidien&nbsp;: les bons réflexes avant le lavage',
+        a: 'Face à une tache, les premiers gestes comptent souvent plus que le produit utilisé. Il est préférable d\'agir rapidement, sans frotter, en tamponnant délicatement la tache avec un tissu propre pour éviter de l\'étaler ou de l\'incruster davantage dans la fibre. L\'eau froide convient à la plupart des taches d\'origine alimentaire ou biologique, tandis que l\'eau chaude a tendance à fixer certaines d\'entre elles, notamment celles à base de protéines comme le sang ou l\'œuf. Avant d\'appliquer un détachant, il est utile de le tester sur une zone peu visible du vêtement afin de vérifier qu\'il n\'abîme ni la couleur ni la matière. Certaines taches anciennes, ou présentes sur des textiles délicats comme la soie ou le velours, résistent aux méthodes courantes et nécessitent un traitement professionnel adapté à la nature du tissu, plutôt qu\'un nettoyage répété qui risquerait de fragiliser la pièce.'
+      },
+      {
+        q: 'Vêtements de cérémonie et pièces précieuses&nbsp;: bien les préserver dans le temps',
+        a: 'Un costume, une robe de cérémonie ou une pièce ancienne méritent une attention différente de celle réservée au linge du quotidien. Ces vêtements sont souvent composés de matières plus fragiles - soie, velours, lainages fins - et leur structure interne (doublure, entoilage) peut être sensible à un nettoyage inadapté. Entre deux utilisations, il est conseillé de les suspendre sur un cintre large et rembourré plutôt qu\'un cintre fin, et de les protéger de la poussière avec une housse en tissu respirant plutôt qu\'en plastique, qui retient l\'humidité. Il n\'est pas nécessaire de nettoyer une pièce de cérémonie après chaque port&nbsp;: un nettoyage trop fréquent use la matière autant qu\'il l\'entretient. En revanche, avant un rangement prolongé ou en cas de tache visible, un examen par un professionnel permet de déterminer le traitement le plus adapté à la matière et à la doublure, sans risquer d\'endommager la pièce.'
+      }
+    ];
+
+    function renderArticles(){
+      var container = document.getElementById('articles-list');
+      if(!container){ return; }
+      var plusSvg = '<svg class="article-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+      articlesData.forEach(function(item, i){
+        var wrap = document.createElement('div');
+        wrap.className = 'article-item';
+        wrap.style.animationDelay = (0.1 + i * 0.09) + 's';
+        var bodyHtml = item.html
+          ? '<div class="article-item__body">' + item.html + '</div>'
+          : '<p class="article-item__a">' + item.a + '</p>';
+        wrap.innerHTML =
+          '<button type="button" class="article-item__q" aria-expanded="false">' +
+            '<span>' + item.q + '</span>' + plusSvg +
+          '</button>' +
+          '<div class="article-item__a-wrap">' + bodyHtml + '</div>';
+        var btn = wrap.querySelector('.article-item__q');
+        var aWrap = wrap.querySelector('.article-item__a-wrap');
+        btn.addEventListener('click', function(){
+          var isOpen = wrap.classList.contains('is-open');
+          Array.prototype.forEach.call(container.querySelectorAll('.article-item'), function(other){
+            other.classList.remove('is-open');
+            other.querySelector('.article-item__q').setAttribute('aria-expanded', 'false');
+            other.querySelector('.article-item__a-wrap').style.maxHeight = '';
+          });
+          if(!isOpen){
+            wrap.classList.add('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+            aWrap.style.maxHeight = aWrap.scrollHeight + 'px';
+          }
+        });
+        container.appendChild(wrap);
+      });
+      window.addEventListener('resize', function(){
+        var openWrap = container.querySelector('.article-item.is-open .article-item__a-wrap');
+        if(openWrap){ openWrap.style.maxHeight = openWrap.scrollHeight + 'px'; }
+      });
+    }
+
+    renderArticles();
 
     var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
     var tabButtons = Array.prototype.slice.call(document.querySelectorAll('.tabs__btn'));
