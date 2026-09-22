@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Back office — Blanchisserie de Molières-sur-Cèze</title>
+<style>
+  :root{
+    --cream:#FFF8EE;
+    --white:#FFFFFF;
+    --ink:#3A3258;
+    --ink-soft:#6E6488;
+    --ink-faint:#9A90AF;
+    --rose:#ECB0A3;
+    --rose-deep:#D8543F;
+    --sage:#93B79C;
+    --sage-deep:#729B7C;
+    --line:#E9DCC9;
+    --line-soft:#F0E6D6;
+    --danger:#C0392B;
+    --danger-bg:#FBEAE8;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:9px;
+    --shadow-card:0 10px 30px -18px rgba(58,50,88,0.28);
+    --shadow-pop:0 24px 60px -20px rgba(58,50,88,0.45);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    background:linear-gradient(175deg, #FBF2E4 0%, #F4ECE0 45%, #EFE7F1 100%);
+    color:var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:"Fraunces", Georgia, serif; margin:0; color:var(--ink);}
+  p{margin:0;}
+  button{font-family:inherit; cursor:pointer;}
+  input,textarea,select{font-family:inherit; font-size:0.92rem;}
+  ::selection{background:var(--rose); color:var(--ink);}
+
+  /* ---------- Screens (login / import) ---------- */
+  .screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:2rem 1.2rem;
+  }
+  .auth-card{
+    width:100%;
+    max-width:420px;
+    background:var(--white);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-pop);
+    padding:2.4rem 2.2rem;
+    border:1px solid var(--line-soft);
+    animation:popIn 0.5s cubic-bezier(0.16,0.8,0.28,1);
+  }
+  @keyframes popIn{from{opacity:0; transform:translateY(14px) scale(0.98);} to{opacity:1; transform:translateY(0) scale(1);}}
+  .auth-card__eyebrow{
+    display:inline-block;
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--rose-deep);
+    margin-bottom:0.6rem;
+  }
+  .auth-card h1{font-size:1.5rem; margin-bottom:0.4rem;}
+  .auth-card__sub{color:var(--ink-soft); font-size:0.92rem; line-height:1.5; margin-bottom:1.6rem;}
+  .field{margin-bottom:1.1rem;}
+  .field label{display:block; font-size:0.8rem; font-weight:600; color:var(--ink-soft); margin-bottom:0.4rem;}
+  .field input[type="password"],
+  .field input[type="text"],
+  .field input[type="number"],
+  .field textarea{
+    width:100%;
+    padding:0.75rem 0.9rem;
+    border:1.5px solid var(--line);
+    border-radius:var(--radius-sm);
+    background:var(--cream);
+    color:var(--ink);
+    outline:none;
+    transition:border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .field input:focus, .field textarea:focus{
+    border-color:var(--rose-deep);
+    box-shadow:0 0 0 4px rgba(216,84,63,0.12);
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:0.5rem;
+    padding:0.78rem 1.3rem;
+    border-radius:999px;
+    border:none;
+    font-weight:600;
+    font-size:0.9rem;
+    transition:transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{
+    background:linear-gradient(135deg, var(--rose-deep), #C8452F);
+    color:#fff;
+    box-shadow:0 10px 22px -10px rgba(216,84,63,0.55);
+    width:100%;
+  }
+  .btn-primary:hover{box-shadow:0 14px 28px -10px rgba(216,84,63,0.62);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1.5px solid var(--line);
+  }
+  .btn-ghost:hover{background:var(--cream); color:var(--ink);}
+  .btn-danger{
+    background:var(--danger-bg);
+    color:var(--danger);
+  }
+  .btn-danger:hover{background:#F5D9D5;}
+  .btn-publish{
+    display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+    padding:0.78rem 1.3rem; border-radius:999px; border:none;
+    font-weight:700; font-size:0.9rem; width:100%;
+    background:linear-gradient(135deg, var(--sage-deep), #5E8A68);
+    color:#fff;
+    box-shadow:0 10px 22px -10px rgba(114,155,124,0.55);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-publish:hover{box-shadow:0 14px 28px -10px rgba(114,155,124,0.62);}
+  .btn-publish:active{transform:scale(0.97);}
+  .btn-publish:disabled{opacity:0.6; cursor:not-allowed; box-shadow:none;}
+  .btn-sm{padding:0.5rem 0.9rem; font-size:0.82rem;}
+  .btn-icon{
+    width:34px; height:34px; padding:0; border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--cream); color:var(--ink-soft); border:1px solid var(--line);
+  }
+  .btn-icon:hover{color:var(--ink); background:var(--line-soft);}
+  .btn-icon.danger:hover{color:var(--danger); background:var(--danger-bg); border-color:#EFC7C0;}
+  .error-msg{
+    margin-top:0.9rem;
+    font-size:0.85rem;
+    color:var(--danger);
+    background:var(--danger-bg);
+    border-radius:var(--radius-sm);
+    padding:0.7rem 0.9rem;
+  }
+  .auth-card__note{
+    margin-top:1.4rem;
+    font-size:0.76rem;
+    color:var(--ink-faint);
+    line-height:1.5;
+    border-top:1px dashed var(--line);
+    padding-top:1rem;
+  }
+
+  /* ---------- App shell ---------- */
+  #app{display:none; min-height:100vh;}
+  #app.is-visible{display:flex;}
+  .sidebar{
+    width:236px;
+    flex-shrink:0;
+    background:var(--white);
+    border-right:1px solid var(--line-soft);
+    display:flex;
+    flex-direction:column;
+    padding:1.4rem 1.1rem;
+    position:sticky;
+    top:0;
+    height:100vh;
+  }
+  .sidebar__brand{
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+    padding:0.3rem 0.4rem 1.4rem;
+    border-bottom:1px solid var(--line-soft);
+    margin-bottom:1.2rem;
+  }
+  .sidebar__brand-badge{
+    width:38px; height:38px; border-radius:11px;
+    background:linear-gradient(135deg, var(--rose-deep), #C8452F);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-family:"Fraunces", serif; font-weight:700; font-size:1.05rem;
+    flex-shrink:0;
+  }
+  .sidebar__brand-text strong{display:block; font-size:0.86rem; line-height:1.25;}
+  .sidebar__brand-text span{display:block; font-size:0.7rem; color:var(--ink-faint); margin-top:0.1rem;}
+  .nav{display:flex; flex-direction:column; gap:0.3rem; flex:1;}
+  .nav-btn{
+    display:flex; align-items:center; gap:0.7rem;
+    padding:0.68rem 0.8rem;
+    border:none; background:none; border-radius:var(--radius-sm);
+    color:var(--ink-soft); font-size:0.88rem; font-weight:600;
+    text-align:left; width:100%;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .nav-btn svg{width:19px; height:19px; flex-shrink:0;}
+  .nav-btn .nav-count{
+    margin-left:auto;
+    font-size:0.7rem;
+    background:var(--cream);
+    color:var(--ink-faint);
+    border-radius:999px;
+    padding:0.1rem 0.5rem;
+    font-weight:700;
+  }
+  .nav-btn:hover{background:var(--cream); color:var(--ink);}
+  .nav-btn.is-active{background:rgba(216,84,63,0.1); color:var(--rose-deep);}
+  .nav-btn.is-active .nav-count{background:rgba(216,84,63,0.16); color:var(--rose-deep);}
+  .sidebar__footer{border-top:1px solid var(--line-soft); padding-top:1rem; display:flex; flex-direction:column; gap:0.55rem;}
+
+  main{flex:1; min-width:0; display:flex; flex-direction:column;}
+  .topbar{
+    position:sticky; top:0; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1rem;
+    padding:1.2rem 2rem;
+    background:rgba(255,248,238,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .topbar h2{font-size:1.35rem;}
+  .topbar__meta{display:flex; align-items:center; gap:0.8rem;}
+  .dirty-pill{
+    font-size:0.72rem; font-weight:700; padding:0.3rem 0.7rem; border-radius:999px;
+    background:#FDEEDB; color:#A9701B;
+    display:none; align-items:center; gap:0.35rem;
+  }
+  .dirty-pill.is-visible{display:inline-flex;}
+  .dirty-pill::before{content:""; width:6px; height:6px; border-radius:50%; background:#C97F1F;}
+
+  .content{padding:1.8rem 2rem 3rem; flex:1;}
+  .tab-panel{display:none; animation:fadeUp 0.35s ease;}
+  .tab-panel.is-active{display:block;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+
+  .panel-intro{max-width:46rem; margin-bottom:1.6rem;}
+  .panel-intro p{color:var(--ink-soft); font-size:0.92rem; line-height:1.55; margin-top:0.3rem;}
+  .panel-actions{display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem; gap:1rem; flex-wrap:wrap;}
+
+  .empty-state{
+    border:1.5px dashed var(--line);
+    border-radius:var(--radius-lg);
+    padding:2.6rem 1.5rem;
+    text-align:center;
+    color:var(--ink-faint);
+  }
+  .empty-state svg{width:34px; height:34px; margin-bottom:0.7rem; color:var(--ink-faint);}
+  .empty-state strong{display:block; color:var(--ink-soft); margin-bottom:0.3rem; font-size:0.95rem;}
+
+  /* ---------- Gallery grid ---------- */
+  .gallery-admin-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));
+    gap:1.1rem;
+  }
+  .gcard{
+    background:var(--white);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    box-shadow:var(--shadow-card);
+    cursor:grab;
+    transition:transform 0.18s ease, box-shadow 0.18s ease;
+    position:relative;
+  }
+  .gcard.dragging{opacity:0.4;}
+  .gcard:hover{transform:translateY(-3px); box-shadow:0 16px 34px -16px rgba(58,50,88,0.35);}
+  .gcard__thumb{
+    aspect-ratio:4/3;
+    background:linear-gradient(135deg, #F3E9DC, #EFE1EC);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ink-faint);
+    position:relative;
+    overflow:hidden;
+  }
+  .gcard__thumb img{width:100%; height:100%; object-fit:cover;}
+  .gcard__thumb svg{width:26px; height:26px;}
+  .gcard__drag{
+    position:absolute; top:0.5rem; left:0.5rem;
+    width:26px; height:26px; border-radius:8px;
+    background:rgba(255,255,255,0.85); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ink-soft);
+  }
+  .gcard__drag svg{width:14px; height:14px;}
+  .gcard__body{padding:0.75rem 0.85rem 0.85rem;}
+  .gcard__label{font-size:0.83rem; font-weight:600; color:var(--ink); line-height:1.35; margin-bottom:0.55rem; min-height:2.3em;}
+  .gcard__actions{display:flex; gap:0.4rem;}
+  .add-card{
+    border:1.5px dashed var(--line);
+    border-radius:var(--radius-md);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:0.5rem;
+    aspect-ratio:4/3;
+    color:var(--ink-faint);
+    background:transparent;
+    transition:border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+  }
+  .add-card:hover{border-color:var(--rose-deep); color:var(--rose-deep); background:rgba(216,84,63,0.04);}
+  .add-card svg{width:26px; height:26px;}
+  .add-card span{font-size:0.82rem; font-weight:600;}
+
+  /* ---------- Tarifs ---------- */
+  .tarif-group{
+    background:var(--white);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-card);
+    padding:1.3rem 1.4rem 1.1rem;
+    margin-bottom:1.2rem;
+  }
+  .tarif-group__head{display:flex; align-items:center; gap:0.6rem; margin-bottom:0.9rem;}
+  .tarif-group__head input{
+    font-family:"Fraunces", serif; font-size:1.05rem; font-weight:600;
+    border:none; background:none; padding:0.2rem 0.3rem; border-radius:8px; flex:1;
+    color:var(--ink);
+  }
+  .tarif-group__head input:focus{outline:none; background:var(--cream);}
+  .tarif-row{
+    display:grid;
+    grid-template-columns:1fr 200px auto;
+    gap:0.6rem;
+    align-items:center;
+    padding:0.35rem 0.2rem;
+    border-bottom:1px dashed var(--line-soft);
+  }
+  .tarif-row:last-of-type{border-bottom:none;}
+  .tarif-row input{
+    border:1px solid transparent;
+    background:transparent;
+    min-width:0;
+    padding:0.45rem 0.55rem;
+    border-radius:8px;
+    color:var(--ink);
+    font-size:0.87rem;
+  }
+  .tarif-row input:hover{background:var(--cream);}
+  .tarif-row input:focus{outline:none; border-color:var(--rose-deep); background:var(--cream);}
+  .tarif-row input.amount{text-align:right; font-family:"JetBrains Mono", monospace; font-size:0.84rem;}
+  .tarif-group__foot{display:flex; justify-content:space-between; align-items:center; margin-top:0.9rem; padding-top:0.8rem; border-top:1px solid var(--line-soft);}
+  .add-group-btn{
+    display:flex; align-items:center; justify-content:center; gap:0.5rem;
+    width:100%; padding:1rem; border-radius:var(--radius-md);
+    border:1.5px dashed var(--line); background:transparent; color:var(--ink-faint);
+    font-weight:600; font-size:0.88rem;
+    transition:border-color 0.18s ease, color 0.18s ease;
+  }
+  .add-group-btn:hover{border-color:var(--rose-deep); color:var(--rose-deep);}
+
+  /* ---------- Articles ---------- */
+  .article-admin-list{display:flex; flex-direction:column; gap:0.85rem;}
+  .acard{
+    background:var(--white);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-card);
+    padding:1rem 1.2rem;
+    display:flex;
+    align-items:center;
+    gap:0.9rem;
+    cursor:grab;
+  }
+  .acard.dragging{opacity:0.4;}
+  .acard__grip{color:var(--ink-faint); flex-shrink:0;}
+  .acard__grip svg{width:16px; height:16px;}
+  .acard__body{flex:1; min-width:0;}
+  .acard__title{font-size:0.93rem; font-weight:600; color:var(--ink); margin-bottom:0.2rem;}
+  .acard__excerpt{font-size:0.8rem; color:var(--ink-faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .acard__badge{
+    font-size:0.66rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+    background:var(--cream); color:var(--ink-faint); border-radius:999px; padding:0.2rem 0.55rem;
+    flex-shrink:0;
+  }
+  .acard__actions{display:flex; gap:0.4rem; flex-shrink:0;}
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(58,50,88,0.42); backdrop-filter:blur(3px);
+    display:none; align-items:flex-start; justify-content:center; z-index:50;
+    padding:4vh 1.2rem; overflow-y:auto;
+  }
+  .modal-backdrop.is-visible{display:flex;}
+  .modal{
+    background:var(--white);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-pop);
+    width:100%; max-width:560px;
+    padding:1.8rem 1.9rem;
+    animation:popIn 0.28s cubic-bezier(0.16,0.8,0.28,1);
+  }
+  .modal h3{font-size:1.2rem; margin-bottom:1.2rem;}
+  .modal__foot{display:flex; justify-content:flex-end; gap:0.6rem; margin-top:1.4rem;}
+  .modal__preview{
+    border:1px solid var(--line-soft); border-radius:var(--radius-sm);
+    background:var(--cream); padding:0.7rem; display:flex; align-items:center; gap:0.8rem; margin-bottom:1.1rem;
+  }
+  .modal__preview img{width:64px; height:48px; object-fit:cover; border-radius:6px;}
+  .modal__preview-empty{
+    width:64px; height:48px; border-radius:6px; background:var(--line-soft);
+    display:flex; align-items:center; justify-content:center; color:var(--ink-faint);
+    flex-shrink:0;
+  }
+  .mode-toggle{display:flex; gap:0.4rem; margin-bottom:1.1rem;}
+  .mode-toggle button{
+    flex:1; padding:0.55rem; border-radius:8px; border:1px solid var(--line); background:var(--cream);
+    font-size:0.8rem; font-weight:600; color:var(--ink-soft);
+  }
+  .mode-toggle button.is-active{background:var(--rose-deep); color:#fff; border-color:var(--rose-deep);}
+  textarea.long{min-height:160px; resize:vertical; line-height:1.5;}
+  textarea.code{min-height:220px; resize:vertical; font-family:"JetBrains Mono", monospace; font-size:0.78rem; line-height:1.5;}
+  .hint{font-size:0.76rem; color:var(--ink-faint); margin-top:0.35rem; line-height:1.4;}
+
+  /* ---------- Toasts ---------- */
+  #toast-container{position:fixed; bottom:1.2rem; right:1.2rem; display:flex; flex-direction:column; gap:0.6rem; z-index:100;}
+  .toast{
+    background:var(--ink); color:#fff; padding:0.75rem 1.1rem; border-radius:var(--radius-sm);
+    font-size:0.85rem; box-shadow:0 14px 30px -12px rgba(0,0,0,0.4);
+    display:flex; align-items:center; gap:0.6rem;
+    animation:toastIn 0.28s cubic-bezier(0.16,0.8,0.28,1);
+    max-width:320px;
+  }
+  .toast.success{background:#2E7D53;}
+  .toast.error{background:var(--danger);}
+  @keyframes toastIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- Loading overlay ---------- */
+  #loading-overlay{
+    position:fixed; inset:0; background:rgba(255,248,238,0.9); backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; z-index:200; flex-direction:column; gap:0.9rem;
+  }
+  #loading-overlay.is-visible{display:flex;}
+  .spinner{
+    width:34px; height:34px; border-radius:50%;
+    border:3px solid var(--line); border-top-color:var(--rose-deep);
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  #loading-overlay span{font-size:0.86rem; color:var(--ink-soft); font-weight:600;}
+
+  @media (max-width:880px){
+    #app.is-visible{flex-direction:column;}
+    .sidebar{width:100%; height:auto; position:static; flex-direction:row; align-items:center; padding:0.9rem 1rem; overflow-x:auto;}
+    .sidebar__brand{border-bottom:none; margin-bottom:0; padding:0 0.8rem 0 0; border-right:1px solid var(--line-soft);}
+    .nav{flex-direction:row;}
+    .sidebar__footer{flex-direction:row; border-top:none; padding-top:0; margin-left:auto;}
+    .content{padding:1.4rem 1.1rem 2.5rem;}
+    .topbar{padding:1rem 1.1rem;}
+    .tarif-row{grid-template-columns:1fr 150px auto;}
+    .tarif-row input.amount{font-size:0.76rem;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="screen" id="login-screen">
+    <div class="auth-card">
+      <span class="auth-card__eyebrow">Accès privé</span>
+      <h1>Back office</h1>
+      <p class="auth-card__sub">Blanchisserie de Molières-sur-Cèze — gestion de la galerie, des tarifs et des articles du site.</p>
+      <div class="field">
+        <label for="login-password">Mot de passe</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" id="login-btn">Se connecter</button>
+      <p class="error-msg" id="login-error" style="display:none;">Mot de passe incorrect.</p>
+      <p class="auth-card__note">La connexion est vérifiée par le serveur ; une fois connecté, vos modifications sont enregistrées directement sur le site en ligne.</p>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__brand-badge">ED</div>
+        <div class="sidebar__brand-text">
+          <strong>Back office</strong>
+          <span>Blanchisserie de Molières</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn is-active" data-tab="galerie">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Galerie</span>
+          <span class="nav-count" id="count-galerie">0</span>
+        </button>
+        <button class="nav-btn" data-tab="tarifs">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+          <span>Tarifs</span>
+          <span class="nav-count" id="count-tarifs">0</span>
+        </button>
+        <button class="nav-btn" data-tab="articles">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+          <span>Articles</span>
+          <span class="nav-count" id="count-articles">0</span>
+        </button>
+      </nav>
+      <div class="sidebar__footer">
+        <button class="btn btn-publish" id="publish-btn">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.5-1.5 4-1.5 4s2.5 0 4-1.5l9-9-2.5-2.5-9 9Z"/><path d="M13 6.5 17.5 11"/><path d="M18 3l3 3-2 2-3-3 2-2Z"/></svg>
+          Publier les modifications
+        </button>
+        <button class="btn btn-ghost btn-sm" id="reload-btn">Recharger depuis le serveur</button>
+        <button class="btn btn-ghost btn-sm" id="logout-btn">Se déconnecter</button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <h2 id="topbar-title">Galerie</h2>
+        <div class="topbar__meta">
+          <span class="dirty-pill" id="dirty-pill">Modifications non publiées</span>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- GALERIE -->
+        <section class="tab-panel is-active" id="tab-galerie">
+          <div class="panel-intro">
+            <h3>Photos de la galerie</h3>
+            <p>Ajoutez, modifiez ou réorganisez les photos affichées dans l'onglet Galerie du site. Glissez une carte pour changer son ordre.</p>
+          </div>
+          <div class="gallery-admin-grid" id="gallery-grid"></div>
+        </section>
+
+        <!-- TARIFS -->
+        <section class="tab-panel" id="tab-tarifs">
+          <div class="panel-intro">
+            <h3>Grille tarifaire</h3>
+            <p>Modifiez les catégories, les lignes et les prix affichés dans l'onglet Tarifs du site.</p>
+          </div>
+          <div id="tarifs-groups"></div>
+          <button class="add-group-btn" id="add-group-btn">+ Ajouter une catégorie</button>
+        </section>
+
+        <!-- ARTICLES -->
+        <section class="tab-panel" id="tab-articles">
+          <div class="panel-intro">
+            <h3>Articles</h3>
+            <p>Ajoutez, modifiez, supprimez ou réorganisez les articles affichés dans l'onglet Articles du site.</p>
+          </div>
+          <div class="panel-actions">
+            <span></span>
+            <button class="btn btn-primary btn-sm" id="add-article-btn">+ Nouvel article</button>
+          </div>
+          <div class="article-admin-list" id="articles-list-admin"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <!-- TOASTS -->
+  <div id="toast-container"></div>
+
+  <!-- LOADING -->
+  <div id="loading-overlay"><div class="spinner"></div><span id="loading-text">Chargement…</span></div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ======================================================
+  // STATE
+  // ======================================================
+  var state = {
+    gallery: [],
+    tarifs: [],
+    articles: [],
+    dirty: false
+  };
+  var uidCounter = 1;
+  function uid(){ return 'id' + (uidCounter++) + '_' + Math.random().toString(36).slice(2,7); }
+
+  // ======================================================
+  // UTIL
+  // ======================================================
+  function $(sel, root){ return (root||document).querySelector(sel); }
+  function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+  function escapeHtml(str){
+    return String(str==null?'':str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function decodeEntitiesForDisplay(str){
+    var ta = document.createElement('textarea');
+    ta.innerHTML = String(str==null?'':str);
+    return ta.value;
+  }
+  function showLoading(text){
+    $('#loading-text').textContent = text || 'Chargement…';
+    $('#loading-overlay').classList.add('is-visible');
+  }
+  function hideLoading(){ $('#loading-overlay').classList.remove('is-visible'); }
+  function toast(msg, type){
+    var t = document.createElement('div');
+    t.className = 'toast' + (type ? ' ' + type : '');
+    t.textContent = msg;
+    $('#toast-container').appendChild(t);
+    setTimeout(function(){
+      t.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      t.style.opacity = '0';
+      t.style.transform = 'translateY(6px)';
+      setTimeout(function(){ t.remove(); }, 320);
+    }, 2600);
+  }
+  function markDirty(){
+    state.dirty = true;
+    $('#dirty-pill').classList.add('is-visible');
+  }
+  function clearDirty(){
+    state.dirty = false;
+    $('#dirty-pill').classList.remove('is-visible');
+  }
+
+  // ======================================================
+  // API HELPERS
+  // ======================================================
+  function api(path, opts){
+    opts = opts || {};
+    return fetch(path, Object.assign({ credentials: 'same-origin' }, opts, {
+      headers: Object.assign({}, opts.body ? { 'Content-Type': 'application/json' } : {}, opts.headers || {})
+    })).then(function(res){
+      if(res.status === 401){ throw { unauthorized: true }; }
+      return res.json().then(function(body){
+        if(!res.ok){ throw new Error(body && body.error ? body.error : ('Erreur serveur (' + res.status + ')')); }
+        return body;
+      });
+    });
+  }
+
+  function withServerIds(list, factory){
+    return (list || []).map(function(it){ return Object.assign({ id: uid() }, factory(it)); });
+  }
+  function toGalleryState(list){ return withServerIds(list, function(it){ return { label: it.label || '', photo: it.photo || null }; }); }
+  function toTarifsState(list){
+    return (list || []).map(function(g){
+      return { id: uid(), title: g.title || '', rows: withServerIds(g.rows, function(r){ return { name: r.name || '', amount: r.amount || '' }; }) };
+    });
+  }
+  function toArticlesState(list){
+    return withServerIds(list, function(it){
+      return it.mode === 'html'
+        ? { title: it.title || '', mode: 'html', html: it.html || '', text: '' }
+        : { title: it.title || '', mode: 'text', html: '', text: it.text || '' };
+    });
+  }
+
+  // ======================================================
+  // LOGIN
+  // ======================================================
+  function tryLogin(){
+    var password = $('#login-password').value;
+    $('#login-btn').disabled = true;
+    api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: password }) })
+      .then(function(){
+        $('#login-error').style.display = 'none';
+        enterApp();
+      })
+      .catch(function(){
+        $('#login-error').style.display = 'block';
+      })
+      .then(function(){ $('#login-btn').disabled = false; });
+  }
+  $('#login-btn').addEventListener('click', tryLogin);
+  $('#login-password').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ tryLogin(); } });
+
+  $('#logout-btn').addEventListener('click', function(){
+    if(state.dirty && !confirm('Des modifications ne sont pas publiées. Se déconnecter les perdra. Continuer ?')){ return; }
+    api('/api/admin/logout', { method: 'POST' }).then(function(){ window.location.reload(); });
+  });
+
+  $('#reload-btn').addEventListener('click', function(){
+    if(state.dirty && !confirm('Des modifications ne sont pas publiées. Recharger depuis le serveur les effacera. Continuer ?')){ return; }
+    loadContent();
+  });
+
+  function enterApp(){
+    $('#login-screen').style.display = 'none';
+    $('#app').classList.add('is-visible');
+    loadContent();
+  }
+
+  function loadContent(){
+    showLoading('Chargement du contenu…');
+    api('/api/admin/content')
+      .then(function(content){
+        state.gallery = toGalleryState(content.gallery);
+        state.tarifs = toTarifsState(content.tarifs);
+        state.articles = toArticlesState(content.articles);
+        clearDirty();
+        hideLoading();
+        renderAll();
+      })
+      .catch(function(err){
+        hideLoading();
+        if(err && err.unauthorized){ window.location.reload(); return; }
+        toast('Impossible de charger le contenu : ' + (err.message || err), 'error');
+      });
+  }
+
+  // Session déjà active (cookie valide) : sauter l'écran de connexion.
+  api('/api/admin/session').then(function(res){
+    if(res.authenticated){ enterApp(); }
+  }).catch(function(){});
+
+  // ======================================================
+  // TABS
+  // ======================================================
+  $all('.nav-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      $all('.nav-btn').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      var tab = btn.getAttribute('data-tab');
+      $all('.tab-panel').forEach(function(p){ p.classList.remove('is-active'); });
+      $('#tab-' + tab).classList.add('is-active');
+      var titles = { galerie:'Galerie', tarifs:'Tarifs', articles:'Articles' };
+      $('#topbar-title').textContent = titles[tab];
+    });
+  });
+
+  // ======================================================
+  // RENDER ALL
+  // ======================================================
+  function renderAll(){
+    renderGalleryAdmin();
+    renderTarifsAdmin();
+    renderArticlesAdmin();
+    $('#count-galerie').textContent = state.gallery.length;
+    $('#count-tarifs').textContent = state.tarifs.reduce(function(n,g){ return n + g.rows.length; }, 0);
+    $('#count-articles').textContent = state.articles.length;
+  }
+
+  // ======================================================
+  // GALLERY ADMIN
+  // ======================================================
+  var galleryGrid = $('#gallery-grid');
+
+  function renderGalleryAdmin(){
+    galleryGrid.innerHTML = '';
+    state.gallery.forEach(function(item){
+      var card = document.createElement('div');
+      card.className = 'gcard';
+      card.setAttribute('draggable', 'true');
+      card.dataset.id = item.id;
+      var thumbHtml = item.photo
+        ? '<img src="' + item.photo + '" alt="">'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 15l-5-5L5 21"/></svg>';
+      card.innerHTML =
+        '<div class="gcard__thumb">' + thumbHtml +
+          '<div class="gcard__drag"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="6" r="1.4"/><circle cx="7" cy="12" r="1.4"/><circle cx="7" cy="18" r="1.4"/><circle cx="14" cy="6" r="1.4"/><circle cx="14" cy="12" r="1.4"/><circle cx="14" cy="18" r="1.4"/></svg></div>' +
+        '</div>' +
+        '<div class="gcard__body">' +
+          '<div class="gcard__label">' + escapeHtml(item.label || 'Sans titre') + '</div>' +
+          '<div class="gcard__actions">' +
+            '<button class="btn-icon edit-g" title="Modifier"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>' +
+            '<button class="btn-icon danger del-g" title="Supprimer"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
+          '</div>' +
+        '</div>';
+      card.querySelector('.edit-g').addEventListener('click', function(){ openGalleryModal(item.id); });
+      card.querySelector('.del-g').addEventListener('click', function(){ deleteGalleryItem(item.id); });
+      galleryGrid.appendChild(card);
+    });
+    var addCard = document.createElement('button');
+    addCard.className = 'add-card';
+    addCard.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Ajouter une photo</span>';
+    addCard.addEventListener('click', function(){ openGalleryModal(null); });
+    galleryGrid.appendChild(addCard);
+
+    enableDragReorder(galleryGrid, '.gcard', function(newOrderIds){
+      reorderByIds(state.gallery, newOrderIds);
+      markDirty();
+    });
+  }
+
+  function deleteGalleryItem(id){
+    if(!confirm('Supprimer cette photo de la galerie ?')) return;
+    state.gallery = state.gallery.filter(function(it){ return it.id !== id; });
+    markDirty();
+    renderAll();
+    toast('Photo supprimée.');
+  }
+
+  function openGalleryModal(id){
+    var isNew = !id;
+    var item = isNew ? { id: uid(), label: '', photo: null } : state.gallery.find(function(it){ return it.id === id; });
+    var pendingPhoto = item.photo;
+
+    var modal = $('#modal');
+    modal.innerHTML =
+      '<h3>' + (isNew ? 'Ajouter une photo' : 'Modifier la photo') + '</h3>' +
+      '<div class="modal__preview" id="g-preview">' +
+        (pendingPhoto ? '<img src="' + pendingPhoto + '" alt="">' : '<div class="modal__preview-empty">?</div>') +
+        '<div><button class="btn btn-ghost btn-sm" id="g-upload-btn">Choisir une image…</button>' +
+        '<input type="file" id="g-file" accept="image/*" style="display:none;"><p class="hint">L\'image sera automatiquement redimensionnée et compressée. Sans photo, la carte affiche un visuel "à intégrer".</p></div>' +
+      '</div>' +
+      '<div class="field"><label>Légende / titre de la photo</label><input type="text" id="g-label" value="' + escapeHtml(item.label) + '" placeholder="Ex. Façade et vitrine"></div>' +
+      '<div class="modal__foot">' +
+        '<button class="btn btn-ghost" id="g-cancel">Annuler</button>' +
+        '<button class="btn btn-primary" id="g-save">Enregistrer</button>' +
+      '</div>';
+    openModal();
+
+    $('#g-upload-btn').addEventListener('click', function(){ $('#g-file').click(); });
+    $('#g-file').addEventListener('change', function(){
+      var f = $('#g-file').files[0];
+      if(!f) return;
+      showLoading('Compression de l\'image…');
+      compressImage(f, 1600, 0.82).then(function(dataUrl){
+        pendingPhoto = dataUrl;
+        $('#g-preview').innerHTML =
+          '<img src="' + dataUrl + '" alt="">' +
+          '<div><button class="btn btn-ghost btn-sm" id="g-upload-btn2">Changer l\'image…</button>' +
+          '<input type="file" id="g-file2" accept="image/*" style="display:none;"><p class="hint">Image chargée (' + Math.round(dataUrl.length/1024) + ' Ko environ).</p></div>';
+        $('#g-upload-btn2').addEventListener('click', function(){ $('#g-file2').click(); });
+        $('#g-file2').addEventListener('change', function(){
+          var f2 = $('#g-file2').files[0];
+          if(!f2) return;
+          showLoading('Compression de l\'image…');
+          compressImage(f2, 1600, 0.82).then(function(du){ pendingPhoto = du; hideLoading(); openGalleryModalRefreshPreview(du); }).catch(function(){ hideLoading(); toast('Erreur lors du traitement de l\'image.', 'error'); });
+        });
+        hideLoading();
+      }).catch(function(){ hideLoading(); toast('Erreur lors du traitement de l\'image.', 'error'); });
+    });
+
+    function openGalleryModalRefreshPreview(dataUrl){
+      $('#g-preview').querySelector('img') ? ($('#g-preview').querySelector('img').src = dataUrl) : null;
+    }
+
+    $('#g-cancel').addEventListener('click', closeModal);
+    $('#g-save').addEventListener('click', function(){
+      var label = $('#g-label').value.trim();
+      if(!label){ toast('Merci d\'indiquer une légende.', 'error'); return; }
+      item.label = label;
+      item.photo = pendingPhoto;
+      if(isNew){ state.gallery.push(item); }
+      markDirty();
+      closeModal();
+      renderAll();
+      toast(isNew ? 'Photo ajoutée.' : 'Photo mise à jour.', 'success');
+    });
+  }
+
+  function compressImage(file, maxDim, quality){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(e){
+        var img = new Image();
+        img.onload = function(){
+          var w = img.width, h = img.height;
+          var scale = Math.min(1, maxDim / Math.max(w, h));
+          var cw = Math.max(1, Math.round(w * scale));
+          var ch = Math.max(1, Math.round(h * scale));
+          var canvas = document.createElement('canvas');
+          canvas.width = cw; canvas.height = ch;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, cw, ch);
+          try{
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          } catch(err){ reject(err); }
+        };
+        img.onerror = function(){ reject(new Error('image invalide')); };
+        img.src = e.target.result;
+      };
+      reader.onerror = function(){ reject(new Error('lecture impossible')); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ======================================================
+  // TARIFS ADMIN
+  // ======================================================
+  var tarifsGroups = $('#tarifs-groups');
+
+  function renderTarifsAdmin(){
+    tarifsGroups.innerHTML = '';
+    state.tarifs.forEach(function(group){
+      var el = document.createElement('div');
+      el.className = 'tarif-group';
+      el.dataset.id = group.id;
+      var rowsHtml = group.rows.map(function(row){
+        return '<div class="tarif-row" data-row-id="' + row.id + '">' +
+          '<input type="text" class="name" value="' + escapeHtml(row.name) + '" placeholder="Nom de l\'article">' +
+          '<input type="text" class="amount" value="' + escapeHtml(row.amount) + '" placeholder="Prix">' +
+          '<button class="btn-icon danger del-row" title="Supprimer la ligne"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+          '</div>';
+      }).join('');
+      el.innerHTML =
+        '<div class="tarif-group__head">' +
+          '<input type="text" class="group-title" value="' + escapeHtml(group.title) + '" placeholder="Nom de la catégorie">' +
+          '<button class="btn-icon danger del-group" title="Supprimer la catégorie"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
+        '</div>' +
+        '<div class="tarif-rows">' + rowsHtml + '</div>' +
+        '<div class="tarif-group__foot">' +
+          '<button class="btn btn-ghost btn-sm add-row">+ Ajouter une ligne</button>' +
+        '</div>';
+
+      el.querySelector('.group-title').addEventListener('input', function(e){ group.title = e.target.value; markDirty(); });
+      el.querySelector('.del-group').addEventListener('click', function(){
+        if(!confirm('Supprimer la catégorie "' + (group.title || 'sans nom') + '" et toutes ses lignes ?')) return;
+        state.tarifs = state.tarifs.filter(function(g){ return g.id !== group.id; });
+        markDirty(); renderAll(); toast('Catégorie supprimée.');
+      });
+      el.querySelector('.add-row').addEventListener('click', function(){
+        group.rows.push({ id: uid(), name: '', amount: '' });
+        markDirty(); renderAll();
+      });
+      $all('.tarif-row', el).forEach(function(rowEl){
+        var rowId = rowEl.dataset.rowId;
+        var row = group.rows.find(function(r){ return r.id === rowId; });
+        rowEl.querySelector('.name').addEventListener('input', function(e){ row.name = e.target.value; markDirty(); });
+        rowEl.querySelector('.amount').addEventListener('input', function(e){ row.amount = e.target.value; markDirty(); });
+        rowEl.querySelector('.del-row').addEventListener('click', function(){
+          group.rows = group.rows.filter(function(r){ return r.id !== rowId; });
+          markDirty(); renderAll();
+        });
+      });
+
+      tarifsGroups.appendChild(el);
+    });
+  }
+
+  $('#add-group-btn').addEventListener('click', function(){
+    state.tarifs.push({ id: uid(), title: 'Nouvelle catégorie', rows: [{ id: uid(), name: '', amount: '' }] });
+    markDirty();
+    renderAll();
+  });
+
+  // ======================================================
+  // ARTICLES ADMIN
+  // ======================================================
+  var articlesListAdmin = $('#articles-list-admin');
+
+  function renderArticlesAdmin(){
+    articlesListAdmin.innerHTML = '';
+    if(state.articles.length === 0){
+      var empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><strong>Aucun article</strong>Ajoutez votre premier article avec le bouton ci-dessus.';
+      articlesListAdmin.appendChild(empty);
+      return;
+    }
+    state.articles.forEach(function(item){
+      var card = document.createElement('div');
+      card.className = 'acard';
+      card.setAttribute('draggable', 'true');
+      card.dataset.id = item.id;
+      var excerpt = item.mode === 'html'
+        ? item.html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+        : item.text;
+      card.innerHTML =
+        '<span class="acard__grip"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="6" r="1.4"/><circle cx="7" cy="12" r="1.4"/><circle cx="7" cy="18" r="1.4"/><circle cx="14" cy="6" r="1.4"/><circle cx="14" cy="12" r="1.4"/><circle cx="14" cy="18" r="1.4"/></svg></span>' +
+        '<div class="acard__body">' +
+          '<div class="acard__title">' + escapeHtml(decodeEntitiesForDisplay(item.title) || 'Sans titre') + '</div>' +
+          '<div class="acard__excerpt">' + escapeHtml(excerpt.slice(0, 110)) + (excerpt.length > 110 ? '…' : '') + '</div>' +
+        '</div>' +
+        (item.mode === 'html' ? '<span class="acard__badge">HTML avancé</span>' : '') +
+        '<div class="acard__actions">' +
+          '<button class="btn-icon edit-a" title="Modifier"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>' +
+          '<button class="btn-icon danger del-a" title="Supprimer"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
+        '</div>';
+      card.querySelector('.edit-a').addEventListener('click', function(){ openArticleModal(item.id); });
+      card.querySelector('.del-a').addEventListener('click', function(){ deleteArticle(item.id); });
+      articlesListAdmin.appendChild(card);
+    });
+
+    enableDragReorder(articlesListAdmin, '.acard', function(newOrderIds){
+      reorderByIds(state.articles, newOrderIds);
+      markDirty();
+    });
+  }
+
+  function deleteArticle(id){
+    if(!confirm('Supprimer cet article ?')) return;
+    state.articles = state.articles.filter(function(it){ return it.id !== id; });
+    markDirty();
+    renderAll();
+    toast('Article supprimé.');
+  }
+
+  $('#add-article-btn').addEventListener('click', function(){ openArticleModal(null); });
+
+  function openArticleModal(id){
+    var isNew = !id;
+    var item = isNew ? { id: uid(), title: '', mode: 'text', text: '', html: '' } : state.articles.find(function(it){ return it.id === id; });
+    var mode = item.mode || 'text';
+
+    var modal = $('#modal');
+    modal.innerHTML =
+      '<h3>' + (isNew ? 'Nouvel article' : 'Modifier l\'article') + '</h3>' +
+      '<div class="field"><label>Titre de l\'article</label><input type="text" id="a-title" value="' + escapeHtml(decodeEntitiesForDisplay(item.title)) + '" placeholder="Ex. Comment prendre soin de la laine"></div>' +
+      '<div class="mode-toggle">' +
+        '<button type="button" id="mode-text" class="' + (mode === 'text' ? 'is-active' : '') + '">Texte simple</button>' +
+        '<button type="button" id="mode-html" class="' + (mode === 'html' ? 'is-active' : '') + '">HTML avancé</button>' +
+      '</div>' +
+      '<div class="field" id="wrap-text" style="' + (mode === 'text' ? '' : 'display:none;') + '">' +
+        '<label>Contenu</label><textarea id="a-text" class="long" placeholder="Texte de l\'article…">' + escapeHtml(item.text) + '</textarea>' +
+        '<p class="hint">Un seul paragraphe de texte, affiché tel quel dans la carte dépliable.</p>' +
+      '</div>' +
+      '<div class="field" id="wrap-html" style="' + (mode === 'html' ? '' : 'display:none;') + '">' +
+        '<label>Contenu HTML</label><textarea id="a-html" class="code" placeholder="&lt;p&gt;…&lt;/p&gt;">' + escapeHtml(item.html) + '</textarea>' +
+        '<p class="hint">Mode avancé : vous pouvez utiliser du HTML (paragraphes, mise en forme). Réservé aux contenus plus riches, comme le guide des symboles d\'entretien.</p>' +
+      '</div>' +
+      '<div class="modal__foot">' +
+        '<button class="btn btn-ghost" id="a-cancel">Annuler</button>' +
+        '<button class="btn btn-primary" id="a-save">Enregistrer</button>' +
+      '</div>';
+    openModal();
+
+    $('#mode-text').addEventListener('click', function(){
+      mode = 'text';
+      $('#mode-text').classList.add('is-active'); $('#mode-html').classList.remove('is-active');
+      $('#wrap-text').style.display = ''; $('#wrap-html').style.display = 'none';
+    });
+    $('#mode-html').addEventListener('click', function(){
+      mode = 'html';
+      $('#mode-html').classList.add('is-active'); $('#mode-text').classList.remove('is-active');
+      $('#wrap-html').style.display = ''; $('#wrap-text').style.display = 'none';
+    });
+    $('#a-cancel').addEventListener('click', closeModal);
+    $('#a-save').addEventListener('click', function(){
+      var title = $('#a-title').value.trim();
+      if(!title){ toast('Merci d\'indiquer un titre.', 'error'); return; }
+      item.title = title;
+      item.mode = mode;
+      if(mode === 'text'){
+        item.text = $('#a-text').value.trim();
+        if(!item.text){ toast('Merci de renseigner le contenu de l\'article.', 'error'); return; }
+      } else {
+        item.html = $('#a-html').value.trim();
+        if(!item.html){ toast('Merci de renseigner le contenu HTML.', 'error'); return; }
+      }
+      if(isNew){ state.articles.push(item); }
+      markDirty();
+      closeModal();
+      renderAll();
+      toast(isNew ? 'Article ajouté.' : 'Article mis à jour.', 'success');
+    });
+  }
+
+  // ======================================================
+  // MODAL helpers
+  // ======================================================
+  function openModal(){ $('#modal-backdrop').classList.add('is-visible'); }
+  function closeModal(){ $('#modal-backdrop').classList.remove('is-visible'); $('#modal').innerHTML = ''; }
+  $('#modal-backdrop').addEventListener('click', function(e){ if(e.target === $('#modal-backdrop')){ closeModal(); } });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeModal(); } });
+
+  // ======================================================
+  // DRAG REORDER (native HTML5 DnD)
+  // ======================================================
+  function enableDragReorder(container, itemSelector, onReorder){
+    var dragEl = null;
+    if(container._dndBound) return;
+    container._dndBound = true;
+
+    container.addEventListener('dragstart', function(e){
+      var item = e.target.closest(itemSelector);
+      if(!item){ return; }
+      dragEl = item;
+      e.dataTransfer.effectAllowed = 'move';
+      try{ e.dataTransfer.setData('text/plain', item.dataset.id); } catch(err){}
+      setTimeout(function(){ item.classList.add('dragging'); }, 0);
+    });
+    container.addEventListener('dragend', function(e){
+      var item = e.target.closest(itemSelector);
+      if(item){ item.classList.remove('dragging'); }
+      if(dragEl){
+        var ids = $all(itemSelector, container).map(function(el){ return el.dataset.id; });
+        onReorder(ids);
+      }
+      dragEl = null;
+    });
+    container.addEventListener('dragover', function(e){
+      if(!dragEl){ return; }
+      e.preventDefault();
+      var items = $all(itemSelector, container).filter(function(el){ return el !== dragEl; });
+      var closest = null, closestDist = Infinity;
+      items.forEach(function(el){
+        var r = el.getBoundingClientRect();
+        var cx = r.left + r.width/2, cy = r.top + r.height/2;
+        var dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+        if(dist < closestDist){ closestDist = dist; closest = el; }
+      });
+      if(!closest){ container.appendChild(dragEl); return; }
+      var rect = closest.getBoundingClientRect();
+      var before = (e.clientX < rect.left + rect.width/2) || (e.clientY < rect.top + rect.height/2 && rect.width > rect.height*2);
+      if(container.classList.contains('article-admin-list')){
+        before = e.clientY < rect.top + rect.height/2;
+      }
+      if(before){ container.insertBefore(dragEl, closest); }
+      else { container.insertBefore(dragEl, closest.nextSibling); }
+    });
+  }
+
+  function reorderByIds(arr, ids){
+    var byId = {};
+    arr.forEach(function(it){ byId[it.id] = it; });
+    var newArr = ids.map(function(id){ return byId[id]; }).filter(Boolean);
+    // append any not included (safety)
+    arr.forEach(function(it){ if(newArr.indexOf(it) === -1){ newArr.push(it); } });
+    arr.length = 0;
+    newArr.forEach(function(it){ arr.push(it); });
+  }
+
+  // ======================================================
+  // SAUVEGARDE / PUBLICATION (API du serveur)
+  // ======================================================
+  function stripIds(){
+    return {
+      gallery: state.gallery.map(function(it){
+        var obj = { label: it.label || '' };
+        if(it.photo) obj.photo = it.photo;
+        return obj;
+      }),
+      tarifs: state.tarifs.map(function(g){
+        return {
+          title: g.title || '',
+          rows: (g.rows || []).map(function(r){ return { name: r.name || '', amount: r.amount || '' }; })
+        };
+      }),
+      articles: state.articles.map(function(it){
+        return {
+          title: it.title || '',
+          mode: it.mode,
+          text: it.text || '',
+          html: it.html || ''
+        };
+      })
+    };
+  }
+
+  window.addEventListener('beforeunload', function(e){
+    if(state.dirty){ e.preventDefault(); e.returnValue = ''; }
+  });
+
+  $('#publish-btn').addEventListener('click', function(){
+    var publishBtn = $('#publish-btn');
+    var payload = stripIds();
+    publishBtn.disabled = true;
+    showLoading('Publication en cours…');
+    Promise.all([
+      api('/api/admin/gallery', { method: 'PUT', body: JSON.stringify(payload.gallery) }),
+      api('/api/admin/tarifs', { method: 'PUT', body: JSON.stringify(payload.tarifs) }),
+      api('/api/admin/articles', { method: 'PUT', body: JSON.stringify(payload.articles) })
+    ]).then(function(){
+      clearDirty();
+      hideLoading();
+      publishBtn.disabled = false;
+      toast('Site publié avec succès.', 'success');
+    }).catch(function(err){
+      hideLoading();
+      publishBtn.disabled = false;
+      if(err && err.unauthorized){
+        toast('Session expirée, veuillez vous reconnecter.', 'error');
+        location.reload();
+        return;
+      }
+      toast((err && err.message) || 'Erreur lors de la publication.', 'error');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

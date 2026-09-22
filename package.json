@@ -1,0 +1,16 @@
+{
+  "name": "blanchisserie-back-office",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site + back office (galerie, tarifs, articles) pour la Blanchisserie de Molières-sur-Cèze.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2"
+  }
+}
